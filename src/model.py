@@ -67,10 +67,11 @@ class ConversationalModel():
         count = 0
 
         while True:
-            print("You > ", end="")
+            print("You >")
             input_message = input()
             output_message = self.reply(input_message)
-            print(f"{self.model_name} > {output_message}")
+            print(f"{self.model_name} >")
+            print(f"{output_message}")
 
             if count == num:
                 break
