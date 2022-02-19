@@ -1,0 +1,4 @@
+basemodel: "rinna/japanese-gpt2-xsmall"
+max_seq_length: 256
+input_path: "/content/gdrive/MyDrive/data/chat_history_cleaned.pk"
+output_path: "gpt2_train_data.txt"
