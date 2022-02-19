@@ -299,7 +299,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Line history preprocessor")
 
     # Add arguments: [https://qiita.com/kzkadc/items/e4fc7bc9c003de1eb6d0]
-    parser.add_argument("-c", "--config_yaml_path", required=True, type=str)
+    parser.add_argument("-c", "--config_yaml_path", required=True, type=str, default="preprocessor_config.yaml")
 
     args = parser.parse_args()
 
