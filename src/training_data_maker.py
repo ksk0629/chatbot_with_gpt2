@@ -39,6 +39,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     with open(args.config_yaml_path, "r") as yaml_f:
-        config_gpt = yaml.safe_load(yaml_f)
+        config = yaml.safe_load(yaml_f)
+    config_general = config["general"]
+    config_dataset = config["dataset"]
 
-    make_training_data(**config_gpt)
+    make_training_data(**config_general, **config_dataset)
