@@ -221,7 +221,7 @@ class LinePreProcessor():
         cleaned_frame.drop(index=[0], inplace=True)
     
         cleaned_frame.reset_index(inplace=True)
-        cleaned_frame.drop(columns=df.columns[[0]], inplace=True)
+        cleaned_frame.drop(columns=cleaned_frame.columns[[0]], inplace=True)
 
         self.__cleaned_frame = cleaned_frame
 
@@ -299,7 +299,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Line history preprocessor")
 
     # Add arguments: [https://qiita.com/kzkadc/items/e4fc7bc9c003de1eb6d0]
-    parser.add_argument("-c", "--config_yaml_path", required=True, type=str, default="preprocessor_config.yaml")
+    parser.add_argument("-c", "--config_yaml_path", required=False, type=str, default="preprocessor_config.yaml")
 
     args = parser.parse_args()
 
