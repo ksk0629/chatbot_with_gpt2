@@ -5,7 +5,7 @@ import yaml
 from transformers import AutoTokenizer
 
 
-def make_training_data(basemodel: str, max_seq_length: int ,input_path: str, output_path: str) -> None:
+def make_training_data(basemodel: str, input_path: str, output_path: str) -> None:
     tokenizer = AutoTokenizer.from_pretrained(basemodel)
 
     # Load input data
@@ -14,10 +14,10 @@ def make_training_data(basemodel: str, max_seq_length: int ,input_path: str, out
 
     all_data = []
     for x, y in zip(frame["input"], frame["output"]):
-        input_tokens = tokenizer.tokenize(x)[:max_seq_length]
+        input_tokens = tokenizer.tokenize(x)[:tokenizer.model_max_length]
         joined_input = "".join(input_tokens).replace('▁', '')
 
-        output_tokens = tokenizer.tokenize(y)[:max_seq_length]
+        output_tokens = tokenizer.tokenize(y)[:tokenizer.model_max_length]
         joined_output = "".join(output_tokens).replace('▁', '')
 
         data = "<s>" + joined_input + "[SEP]" + joined_output + "</s>"
