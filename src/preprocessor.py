@@ -136,7 +136,7 @@ class LinePreProcessor():
         Return
         ------
         bool
-            whether it id from the output user and invalid
+            whether it is from the output user and invalid
         """
         splitted_line = line.split("\t")
 
@@ -231,7 +231,7 @@ class LinePreProcessor():
         Raise
         -----
         AttributeError :
-            if self.cleaned_frame is empty
+            whether self.cleaned_frame is empty
         """
         if self.cleaned_frame.empty:
             raise AttributeError("self.cleaned_frame is empty.")
