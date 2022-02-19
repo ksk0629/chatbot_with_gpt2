@@ -9,7 +9,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 class ConversationalModel():
     """Conversational model class"""
 
-    def __init__(model_path: str, tokenizer_name: str, model_name: str="model") -> None:
+    def __init__(self, model_path: str, tokenizer_name: str, model_name: str="model") -> None:
         """
         Parameters
         ----------
@@ -20,11 +20,13 @@ class ConversationalModel():
 
         """
         self.model_path = model_path
-        self.model_name = model_name
-        self.__tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
+        self.tokenizer_name = tokenizer_name
+        self.__tokenizer = AutoTokenizer.from_pretrained(self.tokenizer_name)
         self.__model = AutoModelForCausalLM.from_pretrained(self.model_path)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.__model.to(self.device)
+
+        self.model_name = model_name
 
     @property
     def tokenizer(self):
@@ -34,7 +36,7 @@ class ConversationalModel():
     def model(self):
         return self.__model
 
-    def reply(self, input_message: str, num_responses: int) -> str:
+    def reply(self, input_message: str, num_responses: int=1) -> str:
         """Reply to the input message.
 
         Parameter
@@ -62,12 +64,11 @@ class ConversationalModel():
         num : Optional[int], default None
             the number of conversations
         """
-        count = 0 if num is not None else num + 1
+        count = 0
 
         while True:
             print("You > ", end="")
             input_message = input()
-            print()
             output_message = self.reply(input_message)
             print(f"{self.model_name} > {output_message}")
 
@@ -90,6 +91,6 @@ if __name__ == "__main__":
     config_general = config["general"]
     config_train = config["train"]
 
-    model = ConversationalModel(model_path=config_train["output_dir"], tokenizer_name=config_general["baseline"])
+    model = ConversationalModel(model_path=config_train["output_dir"], tokenizer_name=config_general["basemodel"])
 
     model.take_conversations()
