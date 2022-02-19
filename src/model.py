@@ -81,7 +81,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Talk with the model")
 
     # Add arguments: [https://qiita.com/kzkadc/items/e4fc7bc9c003de1eb6d0]
-    parser.add_argument("-c", "--config_yaml_path", required=False, type=str, default="mdoel_config.yaml")
+    parser.add_argument("-c", "--config_yaml_path", required=False, type=str, default="model_config.yaml")
 
     args = parser.parse_args()
 
