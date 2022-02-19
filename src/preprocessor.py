@@ -1,5 +1,6 @@
 import argparse
 from typing import List, Optional
+import yaml
 
 import pandas as pd
 
@@ -261,18 +262,6 @@ class LinePreProcessor():
 
         self.__modified_cleaned_frame = pd.DataFrame(message_dict)
 
-    def run_all(self, text_path: str) -> None:
-        """Run all processes.
-
-        Parameter
-        ---------
-        text_path : str
-        """
-        self.read_text(text_path)
-        self.clean_data()
-        self.make_cleaned_frame()
-        self.modify_cleaned_frame()
-
     def save_as_pickle(self, output_path: str) -> None:
         """Save modified cleaned frame as pickle.
 
@@ -291,19 +280,34 @@ class LinePreProcessor():
         frame = self.modified_cleaned_frame.set_axis(["input", "output"], axis=1)
         pd.to_pickle(frame, output_path)
 
+    def run_all(self, input_path: str, output_path: str) -> None:
+        """Run all processes.
+
+        Parameter
+        ---------
+        input_path : str
+        output_path :str
+        """
+        self.read_text(input_path)
+        self.clean_data()
+        self.make_cleaned_frame()
+        self.modify_cleaned_frame()
+        self.save_as_pickle(output_path)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Line history preprocessor")
 
     # Add arguments: [https://qiita.com/kzkadc/items/e4fc7bc9c003de1eb6d0]
-    parser.add_argument("-iu", "--input_username", required=True, type=str)
-    parser.add_argument("-ou", "--output_username", required=True, type=str)
-    parser.add_argument("-t", "--target_year_list", nargs="+", required=True, type=list)
-    parser.add_argument("-i", "--input_path", required=True, type=str)
-    parser.add_argument("-o", "--output_path", required=True, type=str)
+    parser.add_argument("-c", "--config_yaml_path", required=True, type=str)
 
     args = parser.parse_args()
 
-    line_preprcessor = LinePreProcessor(args.input_username, args.output_username, args.target_year_list)
-    line_preprcessor.run_all(args.input_path)
-    line_preprcessor.save_as_pickle(args.output_path)
+    with open(args.config_yaml_path, "r") as yaml_f:
+        config = yaml.safe_load(yaml_f)
+    config_line = config["line"]
+    config_initial = config_line["initial"]
+    config_path = config_line["path"]
+
+    line_preprcessor = LinePreProcessor(**config_initial)
+    line_preprcessor.run_all(**config_path)

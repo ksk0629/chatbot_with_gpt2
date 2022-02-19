@@ -1,0 +1,8 @@
+line:
+  initial:
+    input_username: "input_username"
+    output_username: "output_username"
+    target_year_name: "[2016,2017,2018,2019,2020,2021,2022]"
+  path:
+    input_path: "/content/gdrive/MyDrive/data/chat_history.txt"
+    output_path: "/content/gdrive/MyDrive/data/chat_history_cleaned.pk"
