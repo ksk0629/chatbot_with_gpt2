@@ -1,6 +1,5 @@
 import argparse
 import re
-import sys
 from typing import Optional
 import yaml
 
@@ -77,7 +76,7 @@ class ConversationalModel():
         input_vector = self.tokenizer.encode(actual_input_message, return_tensors='pt').to(self.device)
 
         output = self.model.generate(input_vector, do_sample=True, max_length=128, num_return_sequences=num_responses,
-                                     top_p=0.95, top_k=50, bad_words_ids=[[1], [5]], no_repeat_ngram_size=3)
+                                     pad_token_id=2, top_p=0.95, top_k=50, bad_words_ids=[[1], [5]], no_repeat_ngram_size=3)
 
         actual_response = ""
         for response in self.tokenizer.batch_decode(output):
