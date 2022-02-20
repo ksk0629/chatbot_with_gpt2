@@ -49,6 +49,9 @@ class ConversationalModel():
         message_deleted_unnnecessary_words : str
         """
         message_deleted_unnnecessary_words = message.split('[SEP]</s>')[1]
+
+        message_deleted_unnnecessary_words = re.sub(r"\n", "", message_deleted_unnnecessary_words)
+
         message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('</s>', '')
         message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('<br>', '\n')
         message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('<br/>', '\n')
@@ -57,6 +60,10 @@ class ConversationalModel():
         message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('<br', '\n')
         message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('<br;', '\n')
         message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('</br;', '\n')
+        
+        message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('[<unk>hoto', '')
+        message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('<<unk>hoto', '')
+        message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('/', '')
 
         message_deleted_unnnecessary_words = re.sub(r"\[*\]", "", message_deleted_unnnecessary_words)
         
