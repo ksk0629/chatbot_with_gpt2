@@ -1,4 +1,6 @@
 import argparse
+import re
+import sys
 from typing import Optional
 import yaml
 
@@ -36,6 +38,33 @@ class ConversationalModel():
     def model(self):
         return self.__model
 
+    def delete_unnecessary_words(self, message: str) -> str:
+        """Delete unnecessary words.
+
+        Parameter
+        ---------
+        message : str
+
+        Return
+        ------
+        message_deleted_unnnecessary_words : str
+        """
+        message_deleted_unnnecessary_words = message.split('[SEP]</s>')[1]
+        message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('</s>', '')
+        message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('<br>', '\n')
+        message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('<br/>', '\n')
+        message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('<br:', '\n')
+        message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('<br)', '\n')
+        message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('<br', '\n')
+        message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('<br;', '\n')
+        message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('</br;', '\n')
+
+        message_deleted_unnnecessary_words = re.sub(r"\[*\]", "", message_deleted_unnnecessary_words)
+        
+        message_deleted_unnnecessary_words = message_deleted_unnnecessary_words + "\n"
+
+        return message_deleted_unnnecessary_words
+
     def reply(self, input_message: str, num_responses: int=1) -> str:
         """Reply to the input message.
 
@@ -52,7 +81,7 @@ class ConversationalModel():
 
         actual_response = ""
         for response in self.tokenizer.batch_decode(output):
-            actual_response += response.split('[SEP]</s>')[1].replace('</s>', '').replace('<br>', '\n') + "\n"
+            actual_response += self.delete_unnecessary_words(response)
 
         return actual_response
 
