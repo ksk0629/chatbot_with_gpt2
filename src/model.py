@@ -60,6 +60,7 @@ class ConversationalModel():
         message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('<br', '\n')
         message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('<br;', '\n')
         message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('</br;', '\n')
+        message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('<a', '\n')
         
         message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('[<unk>hoto', '')
         message_deleted_unnnecessary_words = message_deleted_unnnecessary_words.replace('<<unk>hoto', '')
