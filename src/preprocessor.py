@@ -8,7 +8,7 @@ import pandas as pd
 class LinePreProcessor():
     """Preprocessor for line history"""
 
-    def __init__(self, input_username: str, output_username: str, target_year_list: List[str]):
+    def __init__(self, input_username: str, output_username: str, target_year_list: List[str]) -> None:
         self.__data = []
         self.__cleaned_data = []
         self.__cleaned_frame = pd.DataFrame(index=[])
@@ -88,7 +88,7 @@ class LinePreProcessor():
             raise AttributeError("There is no target year.")
 
     def is_valid_line(self, line: str) -> bool:
-        """Check whther the input line is valid.
+        """Check whether the input line is valid.
 
         Parameter
         ---------
@@ -108,7 +108,7 @@ class LinePreProcessor():
         return True
 
     def is_in_names(self, text: str) -> bool:
-        """Check whther self.input_username or self.output_username is in the input text.
+        """Check whether self.input_username or self.output_username is in given text.
 
         Parameter
         ---------
@@ -117,7 +117,7 @@ class LinePreProcessor():
         Return
         ------
         bool
-            whether there is the names
+            whether there is self.input_username or self.output_username
         """
         if self.input_username in text:
             return True
@@ -160,12 +160,15 @@ class LinePreProcessor():
         Parameter
         ---------
         message : str
+            original message
 
         Return
         ------
         changed_message : str
+            message, which is processed through this function
         """
         changed_messeage = message.replace("\n", "<br>")
+
         return changed_messeage
 
     def read_text(self, text_path: str) -> None:
@@ -231,7 +234,7 @@ class LinePreProcessor():
         Raise
         -----
         AttributeError :
-            whether self.cleaned_frame is empty
+            if self.cleaned_frame is empty
         """
         if self.cleaned_frame.empty:
             raise AttributeError("self.cleaned_frame is empty.")
@@ -272,7 +275,7 @@ class LinePreProcessor():
         Raise
         -----
         AttributeError :
-            whether self.modified_cleaned_frame is empty
+            if self.modified_cleaned_frame is empty
         """
         if self.modified_cleaned_frame.empty:
             raise AttributeError("self.modified_cleaned_frame is empty.")
