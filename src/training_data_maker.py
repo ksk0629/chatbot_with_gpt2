@@ -6,6 +6,15 @@ from transformers import AutoTokenizer
 
 
 def make_training_data(basemodel: str, input_path: str, output_path: str) -> None:
+    """Make and save training data to output_path using given basemodel from the file, which is specified by input_path.
+
+    Parameters
+    ----------
+    basemodel : str
+        basemodel name
+    input_path : str
+    output_path : str
+    """
     tokenizer = AutoTokenizer.from_pretrained(basemodel)
 
     # Load input data
@@ -22,8 +31,6 @@ def make_training_data(basemodel: str, input_path: str, output_path: str) -> Non
 
         data = "<s>" + joined_input + "[SEP]" + joined_output + "</s>"
         all_data.append(data)
-    
-    text = "".join(all_data) * 2
 
     # Save data modified for training gpt-2
     with open(output_path, 'w') as output_file:
