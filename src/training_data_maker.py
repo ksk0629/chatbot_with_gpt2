@@ -32,6 +32,8 @@ def make_training_data(basemodel: str, input_path: str, output_path: str) -> Non
         data = "<s>" + joined_input + "[SEP]" + joined_output + "</s>"
         all_data.append(data)
 
+    text = "".join(all_data)
+
     # Save data modified for training gpt-2
     with open(output_path, 'w') as output_file:
         output_file.write(text + '\n')
