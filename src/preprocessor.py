@@ -30,9 +30,6 @@ class LinePreProcessor():
             "Missed call",
             "Canceled call",
             "Call time",
-        ]
-
-        self.__invalid_output_keywords = [
             "[Sticker]",
             "[Photo]",
             "[File]"
@@ -58,10 +55,6 @@ class LinePreProcessor():
     @property
     def invalid_keywords(self) -> List[str]:
         return self.__invalid_keywords
-
-    @property
-    def invalid_output_keywords(self) -> List[str]:
-        return self.__invalid_output_keywords
 
     @property
     def empty(self) -> str:
@@ -126,34 +119,6 @@ class LinePreProcessor():
         else:
             return False
 
-    def is_invalid_output(self, line: str) -> bool:
-        """Check if the line is from the output user and invalid.
-
-        Parameter
-        ---------
-        line : str
-
-        Return
-        ------
-        bool
-            whether it is from the output user and invalid
-        """
-        splitted_line = line.split("\t")
-
-        if len(splitted_line) == 1:  # only message
-            return False
-        
-        name = splitted_line[0]
-        message = splitted_line[1]
-
-        if name == self.output_username:
-            for invalid_output_keyword in self.invalid_output_keywords:
-                if invalid_output_keyword in message:
-                    return True
-
-
-        return False
-
     def change_notation(self, message: str) -> str:
         """Change some notations.
 
@@ -202,7 +167,7 @@ class LinePreProcessor():
                         break
                     does_skip = True  # because the lines after the next line were not sent on target year
             
-            if not (does_skip or self.is_invalid_output(line)):
+            if not does_skip:
                 modified_line = f"{index}\t{line}"
                 cleaned_data.append(modified_line)
         
