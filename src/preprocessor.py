@@ -178,7 +178,7 @@ class LinePreProcessor():
         ---------
         text_path : str
         """
-        with open(text_path) as f:
+        with open(text_path，"r") as f:
             data = f.read()
 
         self.__data = data.split("\n")[3:]
