@@ -8,7 +8,7 @@ import pandas as pd
 class LinePreProcessor():
     """Preprocessor for line history"""
 
-    def __init__(self, input_username: str, output_username: str, target_year_list: List[str]):
+    def __init__(self, input_username: str, output_username: str, target_year_list: List[str]) -> None:
         self.__data = []
         self.__cleaned_data = []
         self.__cleaned_frame = pd.DataFrame(index=[])
@@ -30,9 +30,6 @@ class LinePreProcessor():
             "Missed call",
             "Canceled call",
             "Call time",
-        ]
-
-        self.__invalid_output_keywords = [
             "[Sticker]",
             "[Photo]",
             "[File]"
@@ -60,10 +57,6 @@ class LinePreProcessor():
         return self.__invalid_keywords
 
     @property
-    def invalid_output_keywords(self) -> List[str]:
-        return self.__invalid_output_keywords
-
-    @property
     def empty(self) -> str:
         return ""
 
@@ -88,7 +81,7 @@ class LinePreProcessor():
             raise AttributeError("There is no target year.")
 
     def is_valid_line(self, line: str) -> bool:
-        """Check whther the input line is valid.
+        """Check whether the input line is valid.
 
         Parameter
         ---------
@@ -108,7 +101,7 @@ class LinePreProcessor():
         return True
 
     def is_in_names(self, text: str) -> bool:
-        """Check whther self.input_username or self.output_username is in the input text.
+        """Check whether self.input_username or self.output_username is in given text.
 
         Parameter
         ---------
@@ -117,7 +110,7 @@ class LinePreProcessor():
         Return
         ------
         bool
-            whether there is the names
+            whether there is self.input_username or self.output_username
         """
         if self.input_username in text:
             return True
@@ -126,46 +119,21 @@ class LinePreProcessor():
         else:
             return False
 
-    def is_invalid_output(self, line: str) -> bool:
-        """Check if the line is from the output user and invalid.
-
-        Parameter
-        ---------
-        line : str
-
-        Return
-        ------
-        bool
-            whether it is from the output user and invalid
-        """
-        splitted_line = line.split("\t")
-
-        if len(splitted_line) == 1:  # only message
-            return False
-        
-        name = splitted_line[0]
-        message = splitted_line[1]
-
-        if name == self.output_username:
-            for invalid_output_keyword in self.invalid_output_keywords:
-                if invalid_output_keyword in message:
-                    return True
-
-
-        return False
-
     def change_notation(self, message: str) -> str:
         """Change some notations.
 
         Parameter
         ---------
         message : str
+            original message
 
         Return
         ------
         changed_message : str
+            message, which is processed through this function
         """
         changed_messeage = message.replace("\n", "<br>")
+
         return changed_messeage
 
     def read_text(self, text_path: str) -> None:
@@ -175,7 +143,7 @@ class LinePreProcessor():
         ---------
         text_path : str
         """
-        with open(text_path) as f:
+        with open(text_path, "r") as f:
             data = f.read()
 
         self.__data = data.split("\n")[3:]
@@ -199,7 +167,7 @@ class LinePreProcessor():
                         break
                     does_skip = True  # because the lines after the next line were not sent on target year
             
-            if not (does_skip or self.is_invalid_output(line)):
+            if not does_skip:
                 modified_line = f"{index}\t{line}"
                 cleaned_data.append(modified_line)
         
@@ -231,7 +199,7 @@ class LinePreProcessor():
         Raise
         -----
         AttributeError :
-            whether self.cleaned_frame is empty
+            if self.cleaned_frame is empty
         """
         if self.cleaned_frame.empty:
             raise AttributeError("self.cleaned_frame is empty.")
@@ -272,7 +240,7 @@ class LinePreProcessor():
         Raise
         -----
         AttributeError :
-            whether self.modified_cleaned_frame is empty
+            if self.modified_cleaned_frame is empty
         """
         if self.modified_cleaned_frame.empty:
             raise AttributeError("self.modified_cleaned_frame is empty.")
