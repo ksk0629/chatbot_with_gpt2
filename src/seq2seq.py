@@ -1,3 +1,4 @@
+import argparse
 import pickle
 import random
 
@@ -200,3 +201,28 @@ def talk_with_model(model_path: str, latent_dim: int):
 
         chatbot = ChatBot()
         chatbot.start_chat()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Talk with a model, which is seqence to sequence")
+
+    # Add arguments: [https://qiita.com/kzkadc/items/e4fc7bc9c003de1eb6d0]
+    parser.add_argument("-t", "--train", required=False, type=bool, default=True)
+    parser.add_argument("pk_path", type=str)
+    parser.add_argument("tokenizer_name", type=str, default="rinna/japanese-gpt2-small")
+    parser.add_argument("batch_size", type=int, default=64)
+    parser.add_argument("epochs", type=int, default=600)
+    parser.add_argument("dimensionality", type=int, default=256)
+    parser.add_argument("output_path", type=str, default="seq2seq_model.h5")
+
+    parser.add_argument("-p", "--predict", required=False, type=bool, default=False)
+    parser.add_argument("model_path", type=str, default="seq2seq_model.h5")
+    parser.add_argument("latent_dim", type=int, default=256)
+    
+
+    args = parser.parse_args()
+
+    if args.train:
+        train_seq2seq(args.pk_path, args.tokenizer_name, args.batch_size, args.epochs, args.dimensionality, args.output_path)
+    elif args.preidct:
+        talk_with_model(args.model_path, args.latent_dim)
