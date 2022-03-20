@@ -1,8 +1,8 @@
 import argparse
 from typing import List, Optional
-import yaml
 
 import pandas as pd
+import yaml
 
 
 class LinePreProcessor():
@@ -37,60 +37,79 @@ class LinePreProcessor():
 
     @property
     def data(self) -> List[str]:
+        """Raw data
+
+        :return List[str]: raw text data
+        """
         return self.__data
 
     @property
     def cleaned_data(self) -> List[str]:
+        """Clearned data list
+
+        :return List[str]: cleaned text data
+        """
         return self.__cleaned_data
 
     @property
     def cleaned_frame(self) -> pd.DataFrame:
-        # This has four columns, index number, time, name, and message
+        """Cleaned data pandas.DataFrame
+
+        :return pandas.DataFrame: cleaned text data (This has four columns, index number, time, name, and message.)
+        """
         return self.__cleaned_frame
 
     @property
     def modified_cleaned_frame(self) -> pd.DataFrame:
+        """Modified cleaned data pandas.DataFrame
+
+        :return pd.DataFrame: modified cleaned data
+        """
         return self.__modified_cleaned_frame
 
     @property
     def invalid_keywords(self) -> List[str]:
+        """invalid keyword list
+
+        :return List[str]: invalid keywords
+        """
         return self.__invalid_keywords
 
     @property
     def empty(self) -> str:
+        """Empty text
+
+        :return str: empty text
+        """
         return ""
 
     def check_to_start(self) -> None:
         """Check whether it is ready to preprocess.
 
-        Raises
-        ------
-        AttributeError :
-            if the length of self.data is zero
-            if self.input_username is empty, that is ""
-            if self.output_username is empty, that is ""
-            if the length of self.target_year_list is zero
+        :raises AttributeError: if the length of self.data is zero
+        :raises AttributeError: if self.input_username is empty, that is ""
+        :raises AttributeError: if self.output_username is empty, that is ""
+        :raises AttributeError: if the length of self.target_year_list is zero
         """
+        # Check whether parameters valids or not
         if len(self.data) == 0:
-            raise AttributeError("There is no data.")
+            msg = "There is no data."
+            raise AttributeError(msg)
         elif self.input_username == self.empty:
-            raise AttributeError("input_username is empty.")
+            msg = "input_username is empty."
+            raise AttributeError(msg)
         elif self.output_username == self.empty:
-            raise AttributeError("output_username is empty.")
+            msg = "output_username is empty."
+            raise AttributeError(msg)
         elif len(self.target_year_list) == 0:
-            raise AttributeError("There is no target year.")
+            msg = "There is no target year."
+            raise AttributeError(msg)
 
     def is_valid_line(self, line: str) -> bool:
         """Check whether the input line is valid.
 
-        Parameter
-        ---------
-        line : str
-
-        Return
-        ------
-        bool
-            whether it is valid
+        :param str line: text that should be checked
+        :return bool: whether it is valid
         """
         for invalid_keyword in self.invalid_keywords:
             if invalid_keyword in line:
@@ -101,16 +120,10 @@ class LinePreProcessor():
         return True
 
     def is_in_names(self, text: str) -> bool:
-        """Check whether self.input_username or self.output_username is in given text.
+        """Check whether self.input_username or self.output_username is in a given text.
 
-        Parameter
-        ---------
-        text : str
-
-        Return
-        ------
-        bool
-            whether there is self.input_username or self.output_username
+        :param str text: text that should be checked
+        :return bool: whether there is self.input_username or self.output_username
         """
         if self.input_username in text:
             return True
@@ -120,18 +133,12 @@ class LinePreProcessor():
             return False
 
     def change_notation(self, message: str) -> str:
-        """Change some notations.
+        """Change \n to <br>.
 
-        Parameter
-        ---------
-        message : str
-            original message
-
-        Return
-        ------
-        changed_message : str
-            message, which is processed through this function
+        :param str message: original message
+        :return str: message, which is processed through this function
         """
+
         changed_messeage = message.replace("\n", "<br>")
 
         return changed_messeage
@@ -139,18 +146,18 @@ class LinePreProcessor():
     def read_text(self, text_path: str) -> None:
         """Read a text file.
 
-        Parameter
-        ---------
-        text_path : str
+        :param str text_path: path to a text file
         """
         with open(text_path, "r") as f:
             data = f.read()
 
+        # Omit First three rows because they are meaningless
         self.__data = data.split("\n")[3:]
 
     def clean_data(self) -> None:
-        """Clean the messages."""
-        # Raise AttributeError if it is not ready
+        """Clean the messages.
+        """
+        # Check whether or not can start cleaning the data
         self.check_to_start()
 
         cleaned_data = []
@@ -176,11 +183,9 @@ class LinePreProcessor():
     def make_cleaned_frame(self) -> None:
         """Make the cleaned data as pandas.DataFrame.
 
-        Raise
-        -----
-        AttributeError :
-            if there are no cleaned data
+        :raises AttributeError: if there are no cleaned data
         """
+        # Check whether there is cleaned data or not
         if len(self.cleaned_data) == 0:
             raise AttributeError("self.clean_messages is empty.")
         
@@ -196,11 +201,9 @@ class LinePreProcessor():
     def modify_cleaned_frame(self) -> None:
         """Modify self.cleaned_frame.
 
-        Raise
-        -----
-        AttributeError :
-            if self.cleaned_frame is empty
+        :raises AttributeError: if self.cleaned_frame is empty
         """
+        # Check whether there is cleaned frame or note
         if self.cleaned_frame.empty:
             raise AttributeError("self.cleaned_frame is empty.")
         
@@ -216,7 +219,6 @@ class LinePreProcessor():
 
         message_dict = {self.input_username: [], self.output_username: []}
         previous_name = ""
-        
         for index, line in cleaned_frame.iterrows():
             _, _, name, message = line
 
@@ -232,16 +234,11 @@ class LinePreProcessor():
 
     def save_as_pickle(self, output_path: str) -> None:
         """Save modified cleaned frame as pickle.
-
-        Parameter
-        ---------
-        output_path : str
-
-        Raise
-        -----
-        AttributeError :
-            if self.modified_cleaned_frame is empty
+        
+        :param str output_path: path to preprocessed pickle data
+        :raises AttributeError: if self.modified_cleaned_frame is empty
         """
+        # Check whether there is modified cleaned frame or not
         if self.modified_cleaned_frame.empty:
             raise AttributeError("self.modified_cleaned_frame is empty.")
 
@@ -251,10 +248,8 @@ class LinePreProcessor():
     def run_all(self, input_path: str, output_path: str) -> None:
         """Run all processes.
 
-        Parameter
-        ---------
-        input_path : str
-        output_path :str
+        :param str input_path: path to a text file
+        :param str output_path: path to preprocessed pickle data
         """
         self.read_text(input_path)
         self.clean_data()
@@ -264,11 +259,9 @@ class LinePreProcessor():
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Line history preprocessor")
+    parser = argparse.ArgumentParser(description="Preprocess Line history")
 
-    # Add arguments: [https://qiita.com/kzkadc/items/e4fc7bc9c003de1eb6d0]
     parser.add_argument("-c", "--config_yaml_path", required=False, type=str, default="preprocessor_config.yaml")
-
     args = parser.parse_args()
 
     with open(args.config_yaml_path, "r") as yaml_f:
