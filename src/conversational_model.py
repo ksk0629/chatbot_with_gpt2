@@ -1,10 +1,10 @@
 import argparse
 import re
 from typing import Optional
-import yaml
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
+import yaml
 
 
 class ConversationalModel():
@@ -12,14 +12,9 @@ class ConversationalModel():
 
     def __init__(self, model_path: str, tokenizer_name: str, model_name: str="model") -> None:
         """
-        Parameters
-        ----------
-        model_path : str
-            path to a model file
-        tokenizer_name : str
-            name of a tokenizer, which is used in reply function
-        model_name : str
-            model name that is used in self.take_conversations() function
+        :param str model_path: path to a model file
+        :param str tokenizer_name: name of a tokenizer, which is used in reply function
+        :param str model_name: model name that is used in self.take_conversations() function, defaults to "model"
         """
         self.model_path = model_path
         self.tokenizer_name = tokenizer_name
@@ -30,25 +25,18 @@ class ConversationalModel():
         self.model_name = model_name
 
     @property
-    def tokenizer(self):
+    def tokenizer(self) -> object:
         return self.__tokenizer
 
     @property
-    def model(self):
+    def model(self) -> object:
         return self.__model
 
     def delete_unnecessary_words(self, message: str) -> str:
         """Delete unnecessary words.
 
-        Parameter
-        ---------
-        message : str
-            original message, which is outputted from this model
-
-        Return
-        ------
-        message_deleted_unnnecessary_words : str
-            message, which is modified through this function
+        :param str message: original message, which is outputted from this model
+        :return str: message, which is modified through this function
         """
         message_deleted_unnnecessary_words = message.split('[SEP]</s>')[1]
 
@@ -76,19 +64,10 @@ class ConversationalModel():
 
     def reply(self, input_message: str, max_length: int=128) -> str:
         """Reply to the input message.
-
-        Parameter
-        ---------
-        input_message : str
-            message, which is inpuuted to this model
-        max_length : int
-            maximum length of the output message
-            Note that, the length is about token not letter or word.
-
-        Return
-        ------
-        actual_response : str
-            message, which is outputted from this model
+        
+        :param str input_message: message, which is inpuuted to this model
+        :param str max_length: maximum length of the output message (The length is about token not letter or word.)
+        :return str: message, which is outputted from this model
         """
         actual_input_message = "<s>" + str(input_message) + "[SEP]"
         input_vector = self.tokenizer.encode(actual_input_message, return_tensors='pt').to(self.device)
@@ -105,10 +84,7 @@ class ConversationalModel():
     def take_conversations(self, num: Optional[int]=None) -> None:
         """Talk with this model.
 
-        Parameter
-        ---------
-        num : Optional[int], default None
-            the number of conversations
+        :param Optional[int] num: the number of conversations (If this is None, the conversation will not end automatically.), defaults to None
         """
         count = 0
 
@@ -128,9 +104,7 @@ class ConversationalModel():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Talk with a model")
 
-    # Add arguments: [https://qiita.com/kzkadc/items/e4fc7bc9c003de1eb6d0]
     parser.add_argument("-c", "--config_yaml_path", required=False, type=str, default="model_config.yaml")
-
     args = parser.parse_args()
 
     with open(args.config_yaml_path, "r") as yaml_f:
