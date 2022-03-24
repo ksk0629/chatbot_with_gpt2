@@ -1,19 +1,16 @@
 import argparse
 import pickle
-import yaml
 
 from transformers import AutoTokenizer
+import yaml
 
 
 def make_training_data(basemodel: str, input_path: str, output_path: str) -> None:
     """Make and save training data to output_path using given basemodel from the file, which is specified by input_path.
 
-    Parameters
-    ----------
-    basemodel : str
-        basemodel name
-    input_path : str
-    output_path : str
+    :param str basemodel: basemodel name
+    :param str input_path: path to pickle data made through preprocessor
+    :param str output_path: path to text data to train a gpt-2
     """
     tokenizer = AutoTokenizer.from_pretrained(basemodel)
 
@@ -40,11 +37,9 @@ def make_training_data(basemodel: str, input_path: str, output_path: str) -> Non
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="gpt-2 training data maker")
+    parser = argparse.ArgumentParser(description="Make training data for gpt-2")
 
-    # Add arguments: [https://qiita.com/kzkadc/items/e4fc7bc9c003de1eb6d0]
     parser.add_argument("-c", "--config_yaml_path", required=False, type=str, default="model_config.yaml")
-
     args = parser.parse_args()
 
     with open(args.config_yaml_path, "r") as yaml_f:
