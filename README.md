@@ -9,4 +9,4 @@ I published an article about how to use this repository on dev.to [[My own chatb
 
 ## Reference
 - [GPT-2で友達を再現して対話してみた](https://qiita.com/Yokohide/items/e74254f334e1335cd502)
-- [[How to Build an AI Text Generator: Text Generation with a GPT-2 Model](https://dev.to/oursky/how-to-build-an-ai-text-generator-text-generation-with-a-gpt-2-model-4346)]
+- [How to Build an AI Text Generator: Text Generation with a GPT-2 Model](https://dev.to/oursky/how-to-build-an-ai-text-generator-text-generation-with-a-gpt-2-model-4346)
